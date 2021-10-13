@@ -82,7 +82,7 @@ func New(whoIam int, usersFile string, messageTypes []Message) (ms MessageSystem
 	ms.mbox = make(chan Message, MAXMESSAGES)
 	ms.done = make(chan bool)
 	register(messageTypes)
-	fmt.Println(ms.Peers)
+
 	go func() {
 		listener, err := net.Listen("tcp", ms.Peers[ms.me-1])
 		checkError(err)

@@ -95,7 +95,7 @@ func (ra *RASharedDB) PreProtocol(){
     //Indico que quiero acceder a la sc
     ra.ReqCS = true;
     //Numero de replys a recibir
-    ra.OutRepCnt = len(ra.ms.Peers)         //Numero de replys a recibir
+    ra.OutRepCnt = len(ra.ms.Peers) - 1         //Numero de replys a recibir
 
     //Aviso a todos los puntos de que quiero acceder a la seccion critica
     for id, _ := range ra.ms.Peers{
@@ -107,7 +107,9 @@ func (ra *RASharedDB) PreProtocol(){
         }
     }
     //espero a recibir todas las respuestas para entrar en la SC
+    fmt.Println("Yo: ", ra.Id, " espero cuenta ", ra.OurSeqNum )
     <- ra.chrep
+    fmt.Println(ra.Id," salgo ")
 }
 
 //Pre: Verdad
@@ -120,10 +122,11 @@ func (ra *RASharedDB) PostProtocol(){
     ra.Mutex.Lock();
     //acceso de fichero
     ra.Mutex.Unlock();
-
+    fmt.Println("paso")
     //Si alguien mas quiere acceder a la seccion critica sacamos el id del slice y le enviamos el reply
     for _, value := range ra.RepDefd {
         //Rellenar
+        fmt.Println("valor ", value)
         ra.ms.Send(value, Reply{})
     }
     //una vez enviado los reply reseteamos la lista
@@ -149,30 +152,28 @@ func (ra *RASharedDB) receivesRequest(){
     for {
 
         res := ra.ms.Receive()
+        fmt.Println("Yo: ", ra.Id, " mensaje ", res )
         //miro el tipo de peticion
-        switch v := res.(type) {                                            // ToDo: comprobar que funciona
+        switch element := res.(type) {                                            // ToDo: comprobar que funciona
         case Request:
             //si es request
-            fmt.Println(v)
             var defer_it bool
-            request := res.(Request)
             //actualizo el reloj con la >
-            ra.HigSeqNum = Max(ra.HigSeqNum, request.Clock)
+            ra.HigSeqNum = Max(ra.HigSeqNum, element.Clock)
             //Todo: Actualizar el reloj
             //compruebo si lo ponemos en espera o si le respondemos
-            defer_it = ra.ReqCS && ((request.Clock > ra.OurSeqNum) || (request.Clock > ra.OurSeqNum && request.Pid > ra.Id))
+            defer_it = ra.ReqCS && ((element.Clock > ra.OurSeqNum) || (element.Clock > ra.OurSeqNum && element.Pid > ra.Id))
             if defer_it {
                 //si espera añado el ID del proceso a la lista
-                ra.RepDefd = append(ra.RepDefd, request.Pid)
+                ra.RepDefd = append(ra.RepDefd, element.Pid)
             }else {
                 //Todo: Revisar reply
-                ra.ms.Send(ra.Id, Reply{})
+                ra.ms.Send(element.Pid, Reply{})
             }
             break
         case Reply:
             //si recibo una reply es por que he hecho request por tanto las recibimos y descontamos del total recibidas. Para mi mejor un waitGroup --__O__--
-            fmt.Println(v)
-            ra.OutRepCnt--
+            ra.OutRepCnt = ra.OutRepCnt - 1 //restamos un reply
             if ra.OutRepCnt == 0 {
                 //Si es 0 aviso al proceso de que ya esta el preprotocolo
                 ra.chrep <- true

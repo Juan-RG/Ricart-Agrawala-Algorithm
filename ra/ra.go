@@ -89,7 +89,8 @@ FOR j := l STEP 1 UNTIL N DO        -> Avisamos a todos los procesos de que hemo
 //Post: Realiza  el  PreProtocol  para el  algoritmo de
 //      Ricart-Agrawala Generalizado
 func (ra *RASharedDB) PreProtocol(){
-
+    //Variables compartidas
+    ra.Mutex.Lock()
     //Aumento mi reloj propio
     ra.OurSeqNum = ra.HigSeqNum + 1;
     //Indico que quiero acceder a la sc
@@ -103,34 +104,37 @@ func (ra *RASharedDB) PreProtocol(){
         //si no soy yo envio un mensaje
         if id != ra.Id {
             //Rellenar                                              //Todo: Revisar los relojes segun las diapositivas
+            //aumento el reloj por cada evento de envio
             ra.ms.Send(id, Request{ra.OurSeqNum,ra.Id})
         }
     }
     //espero a recibir todas las respuestas para entrar en la SC
 
-    <- ra.chrep
-    ra.Mutex.Lock();
+    ra.Mutex.Unlock()
+    var a bool
+    a = <- ra.chrep
+    fmt.Println(ra.Id, "salgo ", a)
 }
 
 //Pre: Verdad
 //Post: Realiza  el  PostProtocol  para el  algoritmo de
 //      Ricart-Agrawala Generalizado
 func (ra *RASharedDB) PostProtocol(){
+    ra.Mutex.Lock();
     // TODO completar
     //cogemos el testigo para acceder a la SC
     //me falta el pasarle el fichero a cada usuario ---_____O______---
 
     //acceso de fichero
-    ra.Mutex.Unlock();
     fmt.Println("paso")
     //Si alguien mas quiere acceder a la seccion critica sacamos el id del slice y le enviamos el reply
     for _, value := range ra.RepDefd {
         //Rellenar
-        fmt.Println("valor ", value)
         ra.ms.Send(value, Reply{})
     }
     //una vez enviado los reply reseteamos la lista
     ra.RepDefd = ra.RepDefd[:0]
+    ra.Mutex.Unlock();
 }
 
 func (ra *RASharedDB) Stop(){
@@ -150,9 +154,9 @@ func (ra *RASharedDB) receivesRequest(){
 
     //Mirar como salir del bucle bien
     for {
-
+        //ra.OurSeqNum = ra.OurSeqNum + 1
         res := ra.ms.Receive()
-        fmt.Println("Yo: ", ra.Id, " mensaje ", res )
+        ra.Mutex.Lock()
         //miro el tipo de peticion
         switch element := res.(type) {                                            // ToDo: comprobar que funciona
         case Request:
@@ -162,12 +166,12 @@ func (ra *RASharedDB) receivesRequest(){
             ra.HigSeqNum = Max(ra.HigSeqNum, element.Clock)
             //Todo: Actualizar el reloj
             //compruebo si lo ponemos en espera o si le respondemos
-            defer_it = ra.ReqCS && ((element.Clock > ra.OurSeqNum) || (element.Clock > ra.OurSeqNum && element.Pid > ra.Id))
+            defer_it = ra.ReqCS && ((element.Clock > ra.OurSeqNum) || (element.Clock == ra.OurSeqNum && element.Pid > ra.Id))
+
             if defer_it {
                 //si espera añado el ID del proceso a la lista
                 ra.RepDefd = append(ra.RepDefd, element.Pid)
             }else {
-                //Todo: Revisar reply
                 ra.ms.Send(element.Pid, Reply{})
             }
             break
@@ -179,8 +183,8 @@ func (ra *RASharedDB) receivesRequest(){
                 ra.chrep <- true
             }
             break
-        default:
         }
+        ra.Mutex.Unlock()
     }
 
 }

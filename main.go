@@ -3,6 +3,8 @@ package main
 import (
 	"io/ioutil"
 	"log"
+	"p2/ra"
+	"sync"
 )
 func LeerFichero() string{
 	datosComoBytes, err := ioutil.ReadFile("./datos.txt")
@@ -22,8 +24,16 @@ func EscribirFichero(fragmento string){
 	}
 }
 func main() {
+	var wg sync.WaitGroup
+	ra1 := ra.New(1,"G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt")
+	ra2 := ra.New(2,"G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt")
+	wg.Add(1)
+	go ra2.PreProtocol()
 
-	//ra := ra.New(1,"G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt")
-	//fmt.Println(ra)
+	ra1.PreProtocol()
+
+	ra1.PostProtocol()
+	wg.Wait()
+
 
 }

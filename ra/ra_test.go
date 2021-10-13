@@ -88,14 +88,10 @@ func TestRunRa(t *testing.T) {
 	if ra == nil{
 		t.Errorf("Error create")
 	}
-	go ra1.PreProtocol()
-	go ra.PreProtocol()
-	go ra1.PostProtocol()
-	go ra.PostProtocol()
-	go fmt.Println(ra1)
-	for  {
+	ra1.PreProtocol()
 
-	}
+	ra1.PostProtocol()
+	go fmt.Println(ra1)
 }
 /*
 	p1 := New(1, "./users.txt", []Message{Request{}, Reply{}})

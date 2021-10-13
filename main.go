@@ -1,34 +1,29 @@
 package main
 
-import "fmt"
-
-func main() {
-/*
-	ra := ra2.New(1,"G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt")
-	fmt.Println(ra)
-	ra.PreProtocol()
-*/
-	var s []int
-	printSlice(s)
-
-	// append works on nil slices.
-	s = append(s, 1)
-	printSlice(s)
-
-	// The slice grows as needed.
-	s = append(s, 1)
-	printSlice(s)
-
-	// We can add more than one element at a time.
-	s = append(s, 1, 1, 1)
-	printSlice(s)
-	for i, value := range s {
-		fmt.Println("valores i: ", i , " value: ", value)
+import (
+	"io/ioutil"
+	"log"
+)
+func LeerFichero() string{
+	datosComoBytes, err := ioutil.ReadFile("./datos.txt")
+	if err != nil {
+		log.Fatal(err)
 	}
-	s = s[:0]
-	printSlice(s)
-}
+	// convertir el arreglo a string
+	datosComoString := string(datosComoBytes)
 
-func printSlice(s []int) {
-	fmt.Printf("len=%d cap=%d %v\n", len(s), cap(s), s)
+	return datosComoString
+}
+func EscribirFichero(fragmento string){
+	// write the whole body at once
+	err := ioutil.WriteFile("./datos.txt", []byte(fragmento), 0644)
+	if err != nil {
+		panic(err)
+	}
+}
+func main() {
+
+	//ra := ra.New(1,"G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt")
+	//fmt.Println(ra)
+
 }

@@ -107,9 +107,9 @@ func (ra *RASharedDB) PreProtocol(){
         }
     }
     //espero a recibir todas las respuestas para entrar en la SC
-    fmt.Println("Yo: ", ra.Id, " espero cuenta ", ra.OurSeqNum )
+
     <- ra.chrep
-    fmt.Println(ra.Id," salgo ")
+    ra.Mutex.Lock();
 }
 
 //Pre: Verdad
@@ -119,7 +119,7 @@ func (ra *RASharedDB) PostProtocol(){
     // TODO completar
     //cogemos el testigo para acceder a la SC
     //me falta el pasarle el fichero a cada usuario ---_____O______---
-    ra.Mutex.Lock();
+
     //acceso de fichero
     ra.Mutex.Unlock();
     fmt.Println("paso")

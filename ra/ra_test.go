@@ -11,13 +11,14 @@ import (
 )
 
 func TestRaNewObject(t *testing.T) {
-	ra := New(1,"G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt")
+	ra := New(1, "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt", "lector")
 	fmt.Println(ra.Id)
-	if ra == nil{
+	if ra == nil {
 		t.Errorf("Error create")
 	}
 	ra.PreProtocol()
 }
+
 type Message interface{}
 
 func TestCastTypes(t *testing.T) {
@@ -40,18 +41,18 @@ func TestCastTypes(t *testing.T) {
 				var msg Message
 				decoder.Decode(&msg)
 				conn.Close()
-				switch v := msg.(type) {                                            // ToDo: comprobar que funciona
+				switch v := msg.(type) { // ToDo: comprobar que funciona
 				case Request:
 					if reflect.TypeOf(v) != reflect.TypeOf(Request{}) {
 						t.Errorf("cast error")
 					}
-					fmt.Println("Request: ",v)
+					fmt.Println("Request: ", v)
 					break
 				case Reply:
 					if reflect.TypeOf(v) != reflect.TypeOf(Reply{}) {
 						t.Errorf("cast error")
 					}
-					fmt.Println("Reply: ",v)
+					fmt.Println("Reply: ", v)
 					break
 				}
 
@@ -59,16 +60,16 @@ func TestCastTypes(t *testing.T) {
 			wg.Done()
 		}
 	}()
-	go func () {
+	go func() {
 		conn, _ := net.Dial("tcp", "localhost:30000")
 		encoder := gob.NewEncoder(conn)
-		request := Request{1,1}
+		request := Request{1, 1, "lector"}
 		var msg Message
 		msg = request
 		_ = encoder.Encode(&msg)
 		conn.Close()
 	}()
-	go func () {
+	go func() {
 		conn, _ := net.Dial("tcp", "localhost:30000")
 		encoder := gob.NewEncoder(conn)
 		request := Reply{}
@@ -80,19 +81,36 @@ func TestCastTypes(t *testing.T) {
 	wg.Wait()
 }
 
+func TestCheckMatrix(t *testing.T) {
+	if exclude("lector", "lector") {
+		t.Errorf("Error to get matrix result")
+	} else {
+
+	}
+}
 
 func TestRunRa(t *testing.T) {
-	ra := New(1,"G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt")
-	ra1 := New(2,"G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt")
-	fmt.Println(ra.Id)
-	if ra == nil{
-		t.Errorf("Error create")
-	}
-	ra1.PreProtocol()
+	ra := New(1, "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt", "escritor")
+	ra1 := New(2, "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt", "lector")
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		ra.PreProtocol()
+		fmt.Println("1-he pasado el preprotoculo")
+		ra.PostProtocol()
+		wg.Done()
+	}()
+	go func() {
+		ra1.PreProtocol()
+		fmt.Println("2-he pasado el preprotoculo")
+		ra1.PostProtocol()
+		wg.Done()
+	}()
 
-	ra1.PostProtocol()
-	go fmt.Println(ra1)
+	wg.Wait()
+
 }
+
 /*
 	p1 := New(1, "./users.txt", []Message{Request{}, Reply{}})
 	p2 := New(2, "./users.txt", []Message{Request{}, Reply{}})
@@ -111,4 +129,4 @@ func TestRunRa(t *testing.T) {
 
 
 
- */
+*/

@@ -11,7 +11,7 @@ import (
 )
 
 func TestRaNewObject(t *testing.T) {
-	ra := New(1, "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt", "lector")
+	ra := New(1, "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\users.txt", "lector")
 	fmt.Println(ra.Id)
 	if ra == nil {
 		t.Errorf("Error create")
@@ -90,8 +90,8 @@ func TestCheckMatrix(t *testing.T) {
 }
 
 func TestRunRa(t *testing.T) {
-	ra := New(1, "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt", "escritor")
-	ra1 := New(2, "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\ra\\users.txt", "lector")
+	ra := New(1, "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\users.txt", "escritor")
+	ra1 := New(2, "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\users.txt", "lector")
 	var wg sync.WaitGroup
 	wg.Add(2)
 	go func() {

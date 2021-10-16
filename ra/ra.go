@@ -10,6 +10,7 @@ package ra
 
 import (
 	"fmt"
+	"p2/gestorFichero"
 	"p2/ms"
 	"sync"
 )
@@ -17,10 +18,15 @@ import (
 type Request struct {
 	Clock int
 	Pid   int
-	Tipo  string
+	Tipo string
 }
 
 type Reply struct{}
+
+type Token struct{
+	Mensaje string
+	Tipo string
+}
 
 var MATRIX = [][]bool{{false, true}, {true, true}}
 
@@ -29,7 +35,8 @@ type RASharedDB struct {
 	HigSeqNum int               //maximo reloj recibido
 	OutRepCnt int               //Cuentas de replys
 	ReqCS     bool              //peticion SC
-	RepDefd   []int             //lista de sistemas a responder
+	//RepDefd   []int             //lista de sistemas a responder
+	RepDefd   []Request             //lista de sistemas a responder
 	ms        *ms.MessageSystem //Sistema de comunicación
 	//canales internos
 	done  chan bool   //canal de finalizacion de SC
@@ -37,16 +44,18 @@ type RASharedDB struct {
 	Mutex *sync.Mutex // mutex para proteger concurrencia sobre las variables
 	// TODO: completar
 	Id   int    // id propio
-	tipo string //tipo de accion a realizar por el proceso
+	Tipo string //tipo de accion a realizar por el proceso
+	Fichero *gestorFichero.Fichero
+	//	Linea string
 
 }
 
-func New(me int, usersFile string, tipo string) *RASharedDB {
+func New(me int, usersFile string, tipo string, fichero *gestorFichero.Fichero) *RASharedDB {
 
-	messageTypes := []ms.Message{Request{}, Reply{}}
+	messageTypes := []ms.Message{Request{}, Reply{}, Token{}}
 	msgs := ms.New(me, usersFile, messageTypes)
-	ra := RASharedDB{0, 0, 0, false, []int{}, &msgs, make(chan bool),
-		make(chan bool), &sync.Mutex{}, me, tipo}
+	ra := RASharedDB{0, 0, 0, false, []Request{}, &msgs, make(chan bool),
+		make(chan bool), &sync.Mutex{}, me, tipo,fichero}
 	//Arranco los procesos de recibir request y replys que esta unificado en 1   ToDo: revisar si es correcto
 	go ra.receivesRequest()
 	return &ra
@@ -60,9 +69,11 @@ func (ra *RASharedDB) PreProtocol() {
 	ra.Mutex.Lock()
 	//Aumento mi reloj propio
 	ra.OurSeqNum = ra.HigSeqNum + 1
+
 	//Indico que quiero acceder a la sc
 	ra.ReqCS = true
 	ra.Mutex.Unlock()
+
 	//Numero de replys a recibir
 	ra.OutRepCnt = len(ra.ms.Peers) - 1 //Numero de replys a recibir
 
@@ -73,16 +84,30 @@ func (ra *RASharedDB) PreProtocol() {
 		if nodo != ra.Id {
 			//Rellenar                                              //Todo: Revisar los relojes segun las diapositivas
 			//aumento el reloj por cada evento de envio
-			ra.ms.Send(nodo, Request{ra.OurSeqNum, ra.Id, ra.tipo})
+			ra.ms.Send(nodo, Request{ra.OurSeqNum, ra.Id, ra.Tipo})
 		}
 	}
 	//espero a recibir todas las respuestas para entrar en la SC
-
+	//ra.Mutex.Unlock()
 	//var a bool
 	_ = <-ra.chrep
 
 }
 
+
+func (ra *RASharedDB) AccesSeccionCritica(linea string) {
+	//Si alguien mas quiere acceder a la seccion critica sacamos el id del slice y le enviamos el reply
+	for nodo, _ := range ra.ms.Peers {
+		nodo = nodo + 1 //Indexa en id -1 por tanto hay que tratar del 1.....infi
+		//si no soy yo envio un mensaje
+		if nodo != ra.Id {
+			//Rellenar                                              //Todo: Revisar los relojes segun las diapositivas
+			//aumento el reloj por cada evento de envio
+			fmt.Println("envio")
+			ra.ms.Send(nodo, Token{linea, ra.Tipo})
+		}
+	}
+}
 //Pre: Verdad
 //Post: Realiza  el  PostProtocol  para el  algoritmo de
 //      Ricart-Agrawala Generalizado
@@ -90,8 +115,7 @@ func (ra *RASharedDB) PostProtocol() {
 	//Si alguien mas quiere acceder a la seccion critica sacamos el id del slice y le enviamos el reply
 	ra.ReqCS = false
 	for _, value := range ra.RepDefd {
-		//Rellenar
-		ra.ms.Send(value, Reply{})
+		ra.ms.Send(value.Pid, Reply{})
 	}
 	//una vez enviado los reply reseteamos la lista
 	ra.RepDefd = ra.RepDefd[:0]
@@ -119,6 +143,7 @@ func (ra *RASharedDB) receivesRequest() {
 		res := ra.ms.Receive()
 
 		//miro el tipo de peticion
+
 		switch element := res.(type) { // ToDo: comprobar que funciona
 		case Request:
 			//si es request
@@ -128,15 +153,17 @@ func (ra *RASharedDB) receivesRequest() {
 			//Todo: Actualizar el reloj
 			//compruebo si lo ponemos en espera o si le respondemos
 			ra.Mutex.Lock()
-			defer_it = ra.ReqCS && ((element.Clock > ra.OurSeqNum) || (element.Clock == ra.OurSeqNum && element.Pid > ra.Id)) && exclude(ra.tipo, element.Tipo)
-			fmt.Println("defer_it", defer_it)
+			defer_it = ra.ReqCS && ((element.Clock > ra.OurSeqNum) || (element.Clock == ra.OurSeqNum && element.Pid > ra.Id)) && exclude(ra.Tipo, element.Tipo)
 			ra.Mutex.Unlock()
+
+
 			if defer_it {
 				//si espera añado el ID del proceso a la lista
-				ra.RepDefd = append(ra.RepDefd, element.Pid)
+				ra.RepDefd = append(ra.RepDefd, element)
 			} else {
 				ra.ms.Send(element.Pid, Reply{})
 			}
+
 			break
 		case Reply:
 			//si recibo una reply es por que he hecho request por tanto las recibimos y descontamos del total recibidas. Para mi mejor un waitGroup --__O__--
@@ -146,7 +173,15 @@ func (ra *RASharedDB) receivesRequest() {
 				ra.chrep <- true
 			}
 			break
+		case Token:
+			fmt.Println("llego")
+			if element.Tipo == "escritor" {
+				fmt.Println("escribo")
+				ra.Fichero.EscribirFichero(element.Mensaje)
+			}
+			break
 		}
+
 	}
 
 }

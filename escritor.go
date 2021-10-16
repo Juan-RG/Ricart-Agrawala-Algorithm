@@ -11,30 +11,38 @@ import (
 
 func main() {
 	var id int
-	var ficheroNodos string
+	var ficheroNodos, ficheroEscritura, linea string
 	id, err := strconv.Atoi(os.Args[1])
 	if err != nil {
 		fmt.Println("error cast id nodo")
 		id = 1
 	}
 
-	if len(os.Args) > 2 && os.Args[2] != "" {
+	if os.Args[2] != "" {
 		ficheroNodos = os.Args[2]
 	} else {
 		ficheroNodos = "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\users.txt"
 	}
-	fmt.Println(id, ficheroNodos)
-	ra := ra.New(id, ficheroNodos, "escritor")
+	ficheroEscritura = os.Args[3]
+	linea = os.Args[4]
+	numeroSeg, _ := strconv.Atoi(os.Args[5])
 
-	for {
-		fmt.Println(id, "preproto")
+	fmt.Println(id, ficheroNodos)
+	fichero := gestorFichero.New(ficheroEscritura)
+	ra := ra.New(id, ficheroNodos, "escritor", fichero)
+	for  i := 0; i < 5; i++ {
 		ra.PreProtocol()
-		fmt.Println(id, "leerFichero")
-		gestorFichero.EscribirFichero("hola-------------------------")
-		fmt.Println(id, "postproto")
+		fichero.EscribirFichero(linea)
+		ra.AccesSeccionCritica(linea)
 		ra.PostProtocol()
-		fmt.Println(id, "salgo")
-		time.Sleep(time.Second * 3)
+		time.Sleep(time.Second *time.Duration(numeroSeg))
+
 	}
+	fmt.Println("final")
+
+	for  {
+		
+	}
+	fichero.CerrarDescriptor()
 
 }

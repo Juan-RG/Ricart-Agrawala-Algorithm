@@ -99,6 +99,7 @@ func New(whoIam int, usersFile string, messageTypes []Message) (ms MessageSystem
 				var msg Message
 				err = decoder.Decode(&msg)
 				conn.Close()
+				fmt.Println("lelga mssystem ", msg)
 				ms.mbox <- msg
 			}
 		}

@@ -5,24 +5,26 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sync"
 )
 
-type fichero struct {
+type Fichero struct {
 	f *os.File
+	Mutex *sync.Mutex // mutex para proteger concurrencia sobre las variables
 }
 
-func new(nombre string) *fichero {
+func New(nombre string) *Fichero {
 	f, err := os.OpenFile(nombre, os.O_RDWR, 0644)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fichero := fichero{f}
+	fichero := Fichero{f,&sync.Mutex{}}
 	return &fichero
 }
 
-func (file *fichero) LeerFichero() string {
+func (file *Fichero) LeerFichero() string {
 	var data []byte
-
+	file.Mutex.Lock()
 	// Leer el fichero
 	data, err := ioutil.ReadAll(file.f)
 	if err != nil {
@@ -30,13 +32,14 @@ func (file *fichero) LeerFichero() string {
 		os.Exit(1)
 	}
 	datosComoString := string(data)
-
+	file.Mutex.Unlock()
 	return datosComoString
 }
 
-func (file *fichero) EscribirFichero(fragmento string) {
+func (file *Fichero) EscribirFichero(fragmento string) {
 	var data []byte
 
+	file.Mutex.Lock()
 	// Leer el fichero
 	data, err := ioutil.ReadAll(file.f)
 	if err != nil {
@@ -46,15 +49,16 @@ func (file *fichero) EscribirFichero(fragmento string) {
 
 	// Agrego contenido
 	data = append(data, []byte(fragmento)...)
-
+	data = append(data, []byte("\n")...)
 	// Guardar contenido
 	_, err = file.f.Write(data)
 	if err != nil {
 		fmt.Println(err)
 	}
+	file.Mutex.Unlock()
 
 }
 
-func (file *fichero) CerrarDescriptor() {
+func (file *Fichero) CerrarDescriptor() {
 	file.f.Close()
 }

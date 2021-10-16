@@ -24,16 +24,14 @@ func main() {
 		ficheroNodos = "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\users.txt"
 	}
 	fmt.Println(id, ficheroNodos)
-	ra := ra.New(id, ficheroNodos, "lector")
+	ra := ra.New(id, ficheroNodos, "escritor", "./datos.txt","")
+
+	fichero := gestorFichero.New("./datos")
 
 	for {
-		fmt.Println(id, "preproto")
 		ra.PreProtocol()
-		fmt.Println(id, "leerFichero")
-		gestorFichero.LeerFichero()
-		fmt.Println(id, "postproto")
+		fichero.LeerFichero()
 		ra.PostProtocol()
-		fmt.Println(id, "salgo")
 		time.Sleep(time.Second * 3)
 	}
 

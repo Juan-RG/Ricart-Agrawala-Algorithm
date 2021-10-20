@@ -52,7 +52,7 @@ func parsePeers(path string) (lines []string) {
 // Pre: pid en {1..n}, el conjunto de procesos del SD
 // Post: envía el mensaje msg a pid
 func (ms *MessageSystem) Send(pid int, msg Message) {
-	conn, err := net.Dial("tcp", ms.Peers[pid - 1])
+	conn, err := net.Dial("tcp", ms.Peers[pid-1])
 	checkError(err)
 	encoder := gob.NewEncoder(conn)
 	err = encoder.Encode(&msg)
@@ -67,7 +67,7 @@ func (ms *MessageSystem) Receive() (msg Message) {
 	return msg
 }
 
-func register(messageTypes []Message){
+func register(messageTypes []Message) {
 	for _, msgTp := range messageTypes {
 		gob.Register(msgTp)
 	}
@@ -93,6 +93,7 @@ func New(whoIam int, usersFile string, messageTypes []Message) (ms MessageSystem
 			case <-ms.done:
 				return
 			default:
+				fmt.Println("*****************")
 				conn, err := listener.Accept()
 				checkError(err)
 				decoder := gob.NewDecoder(conn)
@@ -110,6 +111,6 @@ func New(whoIam int, usersFile string, messageTypes []Message) (ms MessageSystem
 //Pre: True
 //Post: termina la ejecución de este ms
 func (ms *MessageSystem) Stop() {
+	fmt.Println("llego**^^^^")
 	ms.done <- true
 }
-

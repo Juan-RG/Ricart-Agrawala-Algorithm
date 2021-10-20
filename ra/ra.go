@@ -9,7 +9,6 @@
 package ra
 
 import (
-	"fmt"
 	"p2/gestorFichero"
 	"p2/ms"
 	"sync"
@@ -18,14 +17,14 @@ import (
 type Request struct {
 	Clock int
 	Pid   int
-	Tipo string
+	Tipo  string
 }
 
 type Reply struct{}
 
-type Token struct{
+type Token struct {
 	Mensaje string
-	Tipo string
+	Tipo    string
 }
 
 //              lectura escritura
@@ -45,10 +44,10 @@ type RASharedDB struct {
 	done  chan bool   //canal de finalizacion de SC
 	chrep chan bool   //canal de recibir replys
 	Mutex *sync.Mutex // mutex para proteger concurrencia sobre las variables
-	
-	Id   int    					//id propio
-	Tipo string 					//tipo de accion a realizar por el proceso (escritura o lectura)
-	Fichero *gestorFichero.Fichero 	//Puntero al fichero que se va a leer o escribir
+
+	Id      int                    //id propio
+	Tipo    string                 //tipo de accion a realizar por el proceso (escritura o lectura)
+	Fichero *gestorFichero.Fichero //Puntero al fichero que se va a leer o escribir
 }
 
 //Ceramos un nuevo nodo con exclusion mutua de Ricart Agrawala
@@ -57,9 +56,9 @@ func New(me int, usersFile string, tipo string, fichero *gestorFichero.Fichero) 
 	msgs := ms.New(me, usersFile, messageTypes)
 
 	ra := RASharedDB{0, 0, 0, false, []Request{}, &msgs, make(chan bool),
-		make(chan bool), &sync.Mutex{}, me, tipo,fichero}
+		make(chan bool), &sync.Mutex{}, me, tipo, fichero}
 	//Arranco los procesos de recibir request y replys que esta unificado en 1
-	go ra.receivesRequest()
+	go ra.receivesMessages()
 
 	return &ra
 }
@@ -127,13 +126,14 @@ func (ra *RASharedDB) PostProtocol() {
 func (ra *RASharedDB) Stop() {
 	ra.ms.Stop()
 	ra.done <- true
+
 }
 
 //Metodo que recibe REQUEST y REPLY.
-func (ra *RASharedDB) receivesRequest() {
+func (ra *RASharedDB) receivesMessages() {
 	for {
 		res := ra.ms.Receive()
-		
+
 		//Comprobamos que tipo de peticion es
 		switch element := res.(type) {
 		case Request:
@@ -142,7 +142,7 @@ func (ra *RASharedDB) receivesRequest() {
 
 			//actualizo el reloj con la >
 			ra.HigSeqNum = Max(ra.HigSeqNum, element.Clock)
-			
+
 			//comprobamos si es necesario guardarlo en la lista de espera o podemos responderle directamente
 			ra.Mutex.Lock()
 			defer_it = ra.ReqCS && ((element.Clock > ra.OurSeqNum) || (element.Clock == ra.OurSeqNum && element.Pid > ra.Id)) && exclude(ra.Tipo, element.Tipo)
@@ -167,16 +167,14 @@ func (ra *RASharedDB) receivesRequest() {
 		case Token:
 			//Si hemos recibido un REQUEST de un escritor, añadimos a nuestro fichero lo que escriba el escritor en el suyo
 			if element.Tipo == "escritor" {
-				fmt.Println("escribo")
 				ra.Fichero.EscribirFichero(element.Mensaje)
 			}
 			break
 		}
 	}
-
 }
 
-//Proceso para comprobar si los tipos de los procesos son compatibles para respoder a una REQUEST 
+//Proceso para comprobar si los tipos de los procesos son compatibles para respoder a una REQUEST
 //o es necesario posponer la respuesta
 func exclude(opProceso string, opT string) bool {
 	op_type := pasarTipoAInt(opProceso)

@@ -1,0 +1,70 @@
+(?<host>\S*) (?<clock>{.*})\n(?<event>.*)
+
+ServerLogs {"ServerLogs":1}
+Initialization Complete
+ServerLogs {"ServerLogs":2, "escritor1":2}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":3, "escritor1":2, "escritor2":2}
+INFO Received Message From Client
+ServerLogs {"escritor2":2, "escritor3":2, "ServerLogs":4, "escritor1":2}
+INFO Received Message From Client
+ServerLogs {"escritor3":2, "ServerLogs":5, "escritor1":3, "escritor2":2}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":6, "escritor1":3, "escritor2":3, "escritor3":2}
+INFO Received Message From Client
+ServerLogs {"escritor1":3, "escritor2":3, "escritor3":3, "ServerLogs":7}
+INFO Received Message From Client
+ServerLogs {"escritor2":3, "escritor3":3, "ServerLogs":8, "escritor1":4}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":9, "escritor1":4, "escritor2":4, "escritor3":3}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":10, "escritor1":4, "escritor2":4, "escritor3":4}
+INFO Received Message From Client
+ServerLogs {"escritor3":4, "ServerLogs":11, "escritor1":5, "escritor2":4}
+INFO Received Message From Client
+ServerLogs {"escritor3":4, "ServerLogs":12, "escritor1":5, "escritor2":5}
+INFO Received Message From Client
+ServerLogs {"escritor2":5, "escritor3":5, "ServerLogs":13, "escritor1":5}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":14, "escritor1":6, "escritor2":5, "escritor3":5}
+INFO Received Message From Client
+ServerLogs {"escritor1":6, "escritor2":6, "escritor3":5, "ServerLogs":15}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":16, "escritor1":6, "escritor2":6, "escritor3":6}
+INFO Received Message From Client
+escritor1 {"escritor1":1}
+Initialization Complete
+escritor1 {"escritor1":2}
+INFO Acceder SC
+escritor1 {"escritor1":3}
+INFO Acceder SC
+escritor1 {"escritor1":4}
+INFO Acceder SC
+escritor1 {"escritor1":5}
+INFO Acceder SC
+escritor1 {"escritor1":6}
+INFO Acceder SC
+escritor2 {"escritor2":1}
+Initialization Complete
+escritor2 {"escritor2":2}
+INFO Acceder SC
+escritor2 {"escritor2":3}
+INFO Acceder SC
+escritor2 {"escritor2":4}
+INFO Acceder SC
+escritor2 {"escritor2":5}
+INFO Acceder SC
+escritor2 {"escritor2":6}
+INFO Acceder SC
+escritor3 {"escritor3":1}
+Initialization Complete
+escritor3 {"escritor3":2}
+INFO Acceder SC
+escritor3 {"escritor3":3}
+INFO Acceder SC
+escritor3 {"escritor3":4}
+INFO Acceder SC
+escritor3 {"escritor3":5}
+INFO Acceder SC
+escritor3 {"escritor3":6}
+INFO Acceder SC

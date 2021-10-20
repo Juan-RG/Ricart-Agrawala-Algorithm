@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"sync"
 )
 
 type Fichero struct {
@@ -28,7 +27,6 @@ func New(nombre string) *Fichero {
 //Devuelve el contenido del fichero
 func (file *Fichero) LeerFichero() string {
 	var data []byte
-	//file.Mutex.Lock()
 	// Leer el fichero
 	data, err := ioutil.ReadAll(file.f)
 	if err != nil {
@@ -36,7 +34,6 @@ func (file *Fichero) LeerFichero() string {
 		os.Exit(1)
 	}
 	datosComoString := string(data)
-	//file.Mutex.Unlock()
 	return datosComoString
 }
 
@@ -44,7 +41,6 @@ func (file *Fichero) LeerFichero() string {
 func (file *Fichero) EscribirFichero(fragmento string) {
 	var data []byte
 
-	//file.Mutex.Lock()
 	// Leer el fichero
 	data, err := ioutil.ReadAll(file.f)
 	if err != nil {
@@ -61,8 +57,6 @@ func (file *Fichero) EscribirFichero(fragmento string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-
-	//file.Mutex.Unlock()
 }
 
 //Cerramos el descriptor del fichero

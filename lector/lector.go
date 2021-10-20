@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
+	"github.com/DistributedClocks/GoVector/govec"
+	"net"
 	"os"
 	"p2/gestorFichero"
 	"p2/ra"
@@ -12,12 +15,17 @@ import (
 func main() {
 	//ID que representara a este nodo
 	var id int
-	
+
+	Logger := govec.InitGoVector("lector", "lector", govec.GetDefaultConfig())
+	conn, _ := net.Dial("tcp", "localhost:8081")
+	opts := govec.GetDefaultLogOptions()
+
+	defer conn.Close()
+
 	//ficheroNodos: Nodos con los que tendra que comunicarse para realizar la seccion critica
-	//ficheroEscritura: fichero que tendra cada nodo para escribir
-	//linea: nuevos datos a añadir al fichero
-	var ficheroNodos, ficheroEscritura, linea string
-	
+	//ficheroLectura: fichero del cual leera
+	var ficheroNodos, ficheroLectura string
+
 	id, err := strconv.Atoi(os.Args[1])
 	if err != nil {
 		fmt.Println("error cast id nodo")
@@ -30,33 +38,43 @@ func main() {
 		ficheroNodos = "G:\\Mi unidad\\primer cuatri\\Sistemas distribuidos\\practicas\\p2\\users.txt"
 	}
 
-	ficheroEscritura = os.Args[3]
-	linea = os.Args[4]
+	ficheroLectura = os.Args[3]
 
 	//Segundo de espera para volver a hacer una accion
-	numeroSeg, _ := strconv.Atoi(os.Args[5])
+	numeroSeg, _ := strconv.Atoi(os.Args[4])
 
 	fmt.Println(id, ficheroNodos)
 
-	fichero := gestorFichero.New(ficheroEscritura)
+	fichero := gestorFichero.New(ficheroLectura)
 	//Creamos nuevo nodo que haga uso del algoritmo de Ricart Agrawala para la exclusion mutua
-	ra := ra.New(id, ficheroNodos, "escritor", fichero)
-	
-	//Lanzamos 5 peticiones de seccion critica para escribir en el fichero
-	for  i := 0; i < 5; i++ {
+	ra := ra.New(id, ficheroNodos, "lector", fichero)
+
+	//Lanzamos 5 peticiones para leer el fichero
+	for i := 0; i < 5; i++ {
+		outBuf := Logger.PrepareSend("Acceder SC Preprotocol", "prueba", opts)
 		//Pedimos al resto de nodos la entrada a seccion critica
 		ra.PreProtocol()
 		//Realizamos las operaciones necesarias en seccion critica, escribimos en el fichero
-		fichero.EscribirFichero(linea)
-		//
-		ra.AccesSeccionCritica(linea)
+		fichero.LeerFichero()
+		enviarServerLogs(outBuf)
+
 		//Avisamos de que vamos a salir de la seccion critica
 		ra.PostProtocol()
-		time.Sleep(time.Second *time.Duration(numeroSeg))
+		time.Sleep(time.Second * time.Duration(numeroSeg))
+
 	}
 
 	fmt.Println("Terminado")
-	for  {}
+	for {
+	}
 
 	fichero.CerrarDescriptor()
+
+}
+
+func enviarServerLogs(buf []byte) {
+	conn, _ := net.Dial("tcp", "localhost:8081")
+	encoder := gob.NewEncoder(conn)
+	_ = encoder.Encode(&buf)
+	conn.Close()
 }

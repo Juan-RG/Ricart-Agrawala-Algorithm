@@ -16,12 +16,6 @@ func main() {
 	//ID que representara a este nodo
 	var id int
 
-	Logger := govec.InitGoVector("lector", "lector", govec.GetDefaultConfig())
-	conn, _ := net.Dial("tcp", "localhost:8081")
-	opts := govec.GetDefaultLogOptions()
-
-	defer conn.Close()
-
 	//ficheroNodos: Nodos con los que tendra que comunicarse para realizar la seccion critica
 	//ficheroLectura: fichero del cual leera
 	var ficheroNodos, ficheroLectura string
@@ -43,15 +37,17 @@ func main() {
 	//Segundo de espera para volver a hacer una accion
 	numeroSeg, _ := strconv.Atoi(os.Args[4])
 
-	fmt.Println(id, ficheroNodos)
 
+	nombreFileLog := "lector" + strconv.Itoa(id)
+	Logger := govec.InitGoVector(nombreFileLog, nombreFileLog, govec.GetDefaultConfig())
 	fichero := gestorFichero.New(ficheroLectura)
+	opts := govec.GetDefaultLogOptions()
 	//Creamos nuevo nodo que haga uso del algoritmo de Ricart Agrawala para la exclusion mutua
 	ra := ra.New(id, ficheroNodos, "lector", fichero)
 
 	//Lanzamos 5 peticiones para leer el fichero
 	for i := 0; i < 5; i++ {
-		outBuf := Logger.PrepareSend("Acceder SC Preprotocol", "prueba", opts)
+		outBuf := Logger.PrepareSend("Acceder SC", id, opts)
 		//Pedimos al resto de nodos la entrada a seccion critica
 		ra.PreProtocol()
 		//Realizamos las operaciones necesarias en seccion critica, escribimos en el fichero
@@ -76,5 +72,5 @@ func enviarServerLogs(buf []byte) {
 	conn, _ := net.Dial("tcp", "localhost:8081")
 	encoder := gob.NewEncoder(conn)
 	_ = encoder.Encode(&buf)
-	conn.Close()
+	defer conn.Close()
 }

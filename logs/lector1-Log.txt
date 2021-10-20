@@ -1,0 +1,12 @@
+lector1 {"lector1":1}
+Initialization Complete
+lector1 {"lector1":2}
+INFO Acceder SC
+lector1 {"lector1":3}
+INFO Acceder SC
+lector1 {"lector1":4}
+INFO Acceder SC
+lector1 {"lector1":5}
+INFO Acceder SC
+lector1 {"lector1":6}
+INFO Acceder SC

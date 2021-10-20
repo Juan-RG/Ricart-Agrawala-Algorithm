@@ -25,6 +25,7 @@ func main() {
 		decoder := gob.NewDecoder(conn)
 		var buf []byte
 		err = decoder.Decode(&buf)
+		fmt.Println("alo")
 		fmt.Println(string(buf))
 		checkError(err)
 		var idProces int

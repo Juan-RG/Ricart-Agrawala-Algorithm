@@ -47,7 +47,6 @@ func main() {
 	//logger del escritor
 	var nombreFileLog string
 	nombreFileLog = "escritor" + strconv.Itoa(id)
-	fmt.Println(nombreFileLog)
 	Logger := govec.InitGoVector(nombreFileLog, nombreFileLog, govec.GetDefaultConfig())
 	opts := govec.GetDefaultLogOptions()
 	fichero := gestorFichero.New(ficheroEscritura)
@@ -55,7 +54,7 @@ func main() {
 	ra := ra.New(id, ficheroNodos, "escritor", fichero)
 
 	//Lanzamos 5 peticiones de seccion critica para escribir en el fichero
-	for i := 0; i < 500; i++ {
+	for i := 0; i < 10; i++ {
 
 		outBuf := Logger.PrepareSend("Acceder SC", id, opts)
 		//Pedimos al resto de nodos la entrada a seccion critica
@@ -70,6 +69,7 @@ func main() {
 		time.Sleep(time.Second * time.Duration(numeroSeg))
 	}
 
+	fmt.Println("ooo")
 	for {
 
 	}

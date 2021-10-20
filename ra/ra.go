@@ -9,6 +9,7 @@
 package ra
 
 import (
+	"fmt"
 	"p2/gestorFichero"
 	"p2/ms"
 	"sync"
@@ -147,7 +148,7 @@ func (ra *RASharedDB) receivesMessages() {
 			ra.Mutex.Lock()
 			defer_it = ra.ReqCS && ((element.Clock > ra.OurSeqNum) || (element.Clock == ra.OurSeqNum && element.Pid > ra.Id)) && exclude(ra.Tipo, element.Tipo)
 			ra.Mutex.Unlock()
-
+			fmt.Println("defer_it -->", defer_it)
 			if defer_it {
 				//si tiene que esperar ya que estamos realizando la SC, guardamos los datos para responderle posteriormente
 				ra.RepDefd = append(ra.RepDefd, element)

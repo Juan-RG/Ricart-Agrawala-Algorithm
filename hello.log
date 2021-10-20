@@ -1,0 +1,70 @@
+(?<host>\S*) (?<clock>{.*})\n(?<event>.*)
+
+ServerLogs {"ServerLogs":1}
+Initialization Complete
+ServerLogs {"ServerLogs":2, "lector1":2}
+INFO Received Message From Client
+ServerLogs {"lector1":2, "lector3":2, "ServerLogs":3}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":4, "lector1":2, "lector3":2, "lector2":2}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":5, "lector1":3, "lector3":2, "lector2":2}
+INFO Received Message From Client
+ServerLogs {"lector2":2, "ServerLogs":6, "lector1":3, "lector3":3}
+INFO Received Message From Client
+ServerLogs {"lector2":3, "ServerLogs":7, "lector1":3, "lector3":3}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":8, "lector1":4, "lector3":3, "lector2":3}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":9, "lector1":4, "lector3":3, "lector2":4}
+INFO Received Message From Client
+ServerLogs {"lector2":4, "ServerLogs":10, "lector1":4, "lector3":4}
+INFO Received Message From Client
+ServerLogs {"lector3":4, "lector2":4, "ServerLogs":11, "lector1":5}
+INFO Received Message From Client
+ServerLogs {"lector2":4, "ServerLogs":12, "lector1":5, "lector3":5}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":13, "lector1":5, "lector3":5, "lector2":5}
+INFO Received Message From Client
+ServerLogs {"lector3":5, "lector2":6, "ServerLogs":14, "lector1":5}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":15, "lector1":6, "lector3":5, "lector2":6}
+INFO Received Message From Client
+ServerLogs {"lector2":6, "ServerLogs":16, "lector1":6, "lector3":6}
+INFO Received Message From Client
+lector1 {"lector1":1}
+Initialization Complete
+lector1 {"lector1":2}
+INFO Acceder SC
+lector1 {"lector1":3}
+INFO Acceder SC
+lector1 {"lector1":4}
+INFO Acceder SC
+lector1 {"lector1":5}
+INFO Acceder SC
+lector1 {"lector1":6}
+INFO Acceder SC
+lector2 {"lector2":1}
+Initialization Complete
+lector2 {"lector2":2}
+INFO Acceder SC
+lector2 {"lector2":3}
+INFO Acceder SC
+lector2 {"lector2":4}
+INFO Acceder SC
+lector2 {"lector2":5}
+INFO Acceder SC
+lector2 {"lector2":6}
+INFO Acceder SC
+lector3 {"lector3":1}
+Initialization Complete
+lector3 {"lector3":2}
+INFO Acceder SC
+lector3 {"lector3":3}
+INFO Acceder SC
+lector3 {"lector3":4}
+INFO Acceder SC
+lector3 {"lector3":5}
+INFO Acceder SC
+lector3 {"lector3":6}
+INFO Acceder SC

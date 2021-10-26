@@ -1,0 +1,102 @@
+escritor1 {"escritor1":1}
+Initialization Complete
+escritor1 {"escritor1":2}
+INFO Pedir Permiso
+escritor1 {"escritor1":3}
+INFO Pedir Permiso
+escritor1 {"escritor1":4}
+INFO Acceder a la SC
+escritor1 {"escritor3":2, "escritor1":5}
+INFO Reply pendiente
+escritor1 {"escritor1":6, "escritor3":2, "escritor2":2}
+INFO Reply pendiente
+escritor1 {"escritor2":2, "escritor1":7, "escritor3":2}
+INFO Pedir Permiso
+escritor1 {"escritor1":8, "escritor3":2, "escritor2":2}
+INFO Pedir Permiso
+escritor1 {"escritor1":9, "escritor3":2, "escritor2":2}
+INFO Acceder a la SC
+escritor1 {"escritor2":8, "escritor1":10, "escritor3":3}
+INFO Reply pendiente
+escritor1 {"escritor1":11, "escritor3":9, "escritor2":9}
+INFO Reply pendiente
+escritor1 {"escritor1":12, "escritor3":9, "escritor2":9}
+INFO Pedir Permiso
+escritor1 {"escritor1":13, "escritor3":9, "escritor2":9}
+INFO Pedir Permiso
+escritor1 {"escritor1":14, "escritor3":9, "escritor2":9}
+INFO Acceder a la SC
+escritor1 {"escritor1":15, "escritor3":10, "escritor2":13}
+INFO Reply pendiente
+escritor1 {"escritor1":16, "escritor3":14, "escritor2":14}
+INFO Reply pendiente
+escritor1 {"escritor1":17, "escritor3":14, "escritor2":14}
+INFO Pedir Permiso
+escritor1 {"escritor1":18, "escritor3":14, "escritor2":14}
+INFO Pedir Permiso
+escritor1 {"escritor1":19, "escritor3":14, "escritor2":14}
+INFO Acceder a la SC
+escritor1 {"escritor1":20, "escritor3":15, "escritor2":18}
+INFO Reply pendiente
+escritor1 {"escritor1":21, "escritor3":19, "escritor2":19}
+INFO Reply pendiente
+escritor1 {"escritor3":19, "escritor2":19, "escritor1":22}
+INFO Pedir Permiso
+escritor1 {"escritor1":23, "escritor3":19, "escritor2":19}
+INFO Pedir Permiso
+escritor1 {"escritor1":24, "escritor3":19, "escritor2":19}
+INFO Acceder a la SC
+escritor1 {"escritor1":25, "escritor3":20, "escritor2":23}
+INFO Reply pendiente
+escritor1 {"escritor1":26, "escritor3":24, "escritor2":24}
+INFO Reply pendiente
+escritor1 {"escritor1":27, "escritor3":24, "escritor2":24}
+INFO Pedir Permiso
+escritor1 {"escritor1":28, "escritor3":24, "escritor2":24}
+INFO Pedir Permiso
+escritor1 {"escritor2":24, "escritor1":29, "escritor3":24}
+INFO Acceder a la SC
+escritor1 {"escritor1":30, "escritor3":25, "escritor2":28}
+INFO Reply pendiente
+escritor1 {"escritor1":31, "escritor3":29, "escritor2":29}
+INFO Reply pendiente
+escritor1 {"escritor1":32, "escritor3":29, "escritor2":29}
+INFO Pedir Permiso
+escritor1 {"escritor1":33, "escritor3":29, "escritor2":29}
+INFO Pedir Permiso
+escritor1 {"escritor1":34, "escritor3":29, "escritor2":29}
+INFO Acceder a la SC
+escritor1 {"escritor1":35, "escritor3":30, "escritor2":33}
+INFO Reply pendiente
+escritor1 {"escritor1":36, "escritor3":34, "escritor2":34}
+INFO Reply pendiente
+escritor1 {"escritor1":37, "escritor3":34, "escritor2":34}
+INFO Pedir Permiso
+escritor1 {"escritor1":38, "escritor3":34, "escritor2":34}
+INFO Pedir Permiso
+escritor1 {"escritor1":39, "escritor3":34, "escritor2":34}
+INFO Acceder a la SC
+escritor1 {"escritor1":40, "escritor3":35, "escritor2":38}
+INFO Reply pendiente
+escritor1 {"escritor1":41, "escritor3":39, "escritor2":39}
+INFO Reply pendiente
+escritor1 {"escritor1":42, "escritor3":39, "escritor2":39}
+INFO Pedir Permiso
+escritor1 {"escritor3":39, "escritor2":39, "escritor1":43}
+INFO Pedir Permiso
+escritor1 {"escritor1":44, "escritor3":39, "escritor2":39}
+INFO Acceder a la SC
+escritor1 {"escritor3":40, "escritor2":43, "escritor1":45}
+INFO Reply pendiente
+escritor1 {"escritor1":46, "escritor3":44, "escritor2":44}
+INFO Reply pendiente
+escritor1 {"escritor3":44, "escritor2":44, "escritor1":47}
+INFO Pedir Permiso
+escritor1 {"escritor2":44, "escritor1":48, "escritor3":44}
+INFO Pedir Permiso
+escritor1 {"escritor1":49, "escritor3":44, "escritor2":44}
+INFO Acceder a la SC
+escritor1 {"escritor1":50, "escritor3":45, "escritor2":48}
+INFO Reply pendiente
+escritor1 {"escritor1":51, "escritor3":49, "escritor2":49}
+INFO Reply pendiente

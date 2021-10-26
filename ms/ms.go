@@ -93,14 +93,12 @@ func New(whoIam int, usersFile string, messageTypes []Message) (ms MessageSystem
 			case <-ms.done:
 				return
 			default:
-				fmt.Println("*****************")
 				conn, err := listener.Accept()
 				checkError(err)
 				decoder := gob.NewDecoder(conn)
 				var msg Message
 				err = decoder.Decode(&msg)
 				conn.Close()
-				fmt.Println("lelga mssystem ", msg)
 				ms.mbox <- msg
 			}
 		}
@@ -111,6 +109,5 @@ func New(whoIam int, usersFile string, messageTypes []Message) (ms MessageSystem
 //Pre: True
 //Post: termina la ejecución de este ms
 func (ms *MessageSystem) Stop() {
-	fmt.Println("llego**^^^^")
 	ms.done <- true
 }

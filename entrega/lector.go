@@ -43,7 +43,7 @@ func main() {
 	fichero := gestorFichero.New(ficheroLectura)
 	opts := govec.GetDefaultLogOptions()
 	//Creamos nuevo nodo que haga uso del algoritmo de Ricart Agrawala para la exclusion mutua
-	ra := ra.New(id, ficheroNodos, "lector", fichero, Logger)
+	ra := ra.New(id, ficheroNodos, "lector", fichero)
 	time.Sleep(time.Second * time.Duration(5))
 	//Lanzamos 5 peticiones para leer el fichero
 	for i := 0; i < 5; i++ {

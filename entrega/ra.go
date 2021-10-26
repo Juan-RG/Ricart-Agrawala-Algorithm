@@ -9,7 +9,6 @@
 package ra
 
 import (
-	"github.com/DistributedClocks/GoVector/govec"
 	"p2/gestorFichero"
 	"p2/ms"
 	"sync"
@@ -19,7 +18,6 @@ type Request struct {
 	Clock int
 	Pid   int
 	Tipo  string
-	Data  []byte
 }
 
 type Reply struct{}
@@ -50,17 +48,15 @@ type RASharedDB struct {
 	Id      int                    //id propio
 	Tipo    string                 //tipo de accion a realizar por el proceso (escritura o lectura)
 	Fichero *gestorFichero.Fichero //Puntero al fichero que se va a leer o escribir
-
-	Logger *govec.GoLog
 }
 
 //Ceramos un nuevo nodo con exclusion mutua de Ricart Agrawala
-func New(me int, usersFile string, tipo string, fichero *gestorFichero.Fichero , log *govec.GoLog) *RASharedDB {
+func New(me int, usersFile string, tipo string, fichero *gestorFichero.Fichero) *RASharedDB {
 	messageTypes := []ms.Message{Request{}, Reply{}, Token{}}
 	msgs := ms.New(me, usersFile, messageTypes)
 
 	ra := RASharedDB{0, 0, 0, false, []Request{}, &msgs, make(chan bool),
-		make(chan bool), &sync.Mutex{}, me, tipo, fichero, log}
+		make(chan bool), &sync.Mutex{}, me, tipo, fichero}
 	//Arranco los procesos de recibir request y replys que esta unificado en 1
 	go ra.receivesMessages()
 
@@ -84,15 +80,13 @@ func (ra *RASharedDB) PreProtocol() {
 	//Numero de replys a recibir
 	ra.OutRepCnt = len(ra.ms.Peers) - 1 //Numero de replys a recibir
 
-	opts := govec.GetDefaultLogOptions()
 	//Aviso a todos los puntos de que quiero acceder a la seccion critica
 	for nodo, _ := range ra.ms.Peers {
 		nodo = nodo + 1 //Indexa en id -1 por tanto hay que tratar del 1.....infi
 		//si no soy yo envio un mensaje
 		if nodo != ra.Id {
 			//Rellenar
-			buffer := ra.Logger.PrepareSend("Pedir Permiso", ra.Id, opts)
-			ra.ms.Send(nodo, Request{ra.OurSeqNum, ra.Id, ra.Tipo, buffer})
+			ra.ms.Send(nodo, Request{ra.OurSeqNum, ra.Id, ra.Tipo})
 		}
 	}
 
@@ -120,12 +114,8 @@ func (ra *RASharedDB) AccesSeccionCritica(linea string) {
 func (ra *RASharedDB) PostProtocol() {
 	//Si alguien mas quiere acceder a la seccion critica sacamos el id del slice y le enviamos el reply
 	ra.ReqCS = false
-	opts := govec.GetDefaultLogOptions()
-	var idProces int
+
 	for _, value := range ra.RepDefd {
-
-
-		ra.Logger.UnpackReceive("Reply pendiente", value.Data, &idProces, opts)
 		ra.ms.Send(value.Pid, Reply{})
 	}
 
@@ -161,15 +151,11 @@ func (ra *RASharedDB) receivesMessages() {
 				//si tiene que esperar ya que estamos realizando la SC, guardamos los datos para responderle posteriormente
 				ra.RepDefd = append(ra.RepDefd, element)
 			} else {
-				var idProces int
-				opts := govec.GetDefaultLogOptions()
-				ra.Logger.UnpackReceive("Reply ",element.Data, &idProces, opts)
 				ra.ms.Send(element.Pid, Reply{})
 			}
 
 			break
 		case Reply:
-
 			//si recibo una reply es por que he hecho request por tanto las recibimos y descontamos del total recibidas.
 			ra.OutRepCnt = ra.OutRepCnt - 1 //restamos un reply
 			if ra.OutRepCnt == 0 {

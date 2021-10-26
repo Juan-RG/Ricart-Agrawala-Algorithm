@@ -51,14 +51,16 @@ func main() {
 	opts := govec.GetDefaultLogOptions()
 	fichero := gestorFichero.New(ficheroEscritura)
 	//Creamos nuevo nodo que haga uso del algoritmo de Ricart Agrawala para la exclusion mutua
-	ra := ra.New(id, ficheroNodos, "escritor", fichero)
-
+	ra := ra.New(id, ficheroNodos, "escritor", fichero, Logger)
+	//Espera para que se conecte en el lab
+	time.Sleep(time.Second * time.Duration(numeroSeg))
 	//Lanzamos 5 peticiones de seccion critica para escribir en el fichero
 	for i := 0; i < 10; i++ {
+		time.Sleep(time.Second * time.Duration(numeroSeg))
 
-		outBuf := Logger.PrepareSend("Acceder SC", id, opts)
 		//Pedimos al resto de nodos la entrada a seccion critica
 		ra.PreProtocol()
+		outBuf := Logger.PrepareSend("Acceder a la SC", id, opts)
 		//Realizamos las operaciones necesarias en seccion critica, escribimos en el fichero
 		fichero.EscribirFichero(linea)
 		enviarServerLogs(outBuf)
@@ -66,14 +68,14 @@ func main() {
 		ra.AccesSeccionCritica(linea)
 		//Avisamos de que vamos a salir de la seccion critica
 		ra.PostProtocol()
-		time.Sleep(time.Second * time.Duration(numeroSeg))
+
 	}
 
-	fmt.Println("ooo")
+	fmt.Println("fin")
 	for {
 
 	}
-	//ra.Stop()
+	ra.Stop()
 
 	defer fichero.CerrarDescriptor()
 

@@ -1,32 +1,62 @@
 ServerLogs {"ServerLogs":1}
 Initialization Complete
-ServerLogs {"ServerLogs":2, "lector1":2}
+ServerLogs {"ServerLogs":2, "escritor1":4}
 INFO Received Message From Client
-ServerLogs {"lector1":2, "lector3":2, "ServerLogs":3}
+ServerLogs {"ServerLogs":3, "escritor1":4, "escritor2":5}
 INFO Received Message From Client
-ServerLogs {"ServerLogs":4, "lector1":2, "lector3":2, "lector2":2}
+ServerLogs {"escritor3":6, "ServerLogs":4, "escritor1":4, "escritor2":5}
 INFO Received Message From Client
-ServerLogs {"ServerLogs":5, "lector1":3, "lector3":2, "lector2":2}
+ServerLogs {"ServerLogs":5, "escritor1":9, "escritor2":5, "escritor3":6}
 INFO Received Message From Client
-ServerLogs {"lector2":2, "ServerLogs":6, "lector1":3, "lector3":3}
+ServerLogs {"ServerLogs":6, "escritor1":9, "escritor2":10, "escritor3":6}
 INFO Received Message From Client
-ServerLogs {"lector2":3, "ServerLogs":7, "lector1":3, "lector3":3}
+ServerLogs {"escritor1":9, "escritor2":10, "escritor3":11, "ServerLogs":7}
 INFO Received Message From Client
-ServerLogs {"ServerLogs":8, "lector1":4, "lector3":3, "lector2":3}
+ServerLogs {"escritor3":11, "ServerLogs":8, "escritor1":14, "escritor2":10}
 INFO Received Message From Client
-ServerLogs {"ServerLogs":9, "lector1":4, "lector3":3, "lector2":4}
+ServerLogs {"escritor2":15, "escritor3":11, "ServerLogs":9, "escritor1":14}
 INFO Received Message From Client
-ServerLogs {"lector2":4, "ServerLogs":10, "lector1":4, "lector3":4}
+ServerLogs {"escritor2":15, "escritor3":16, "ServerLogs":10, "escritor1":14}
 INFO Received Message From Client
-ServerLogs {"lector3":4, "lector2":4, "ServerLogs":11, "lector1":5}
+ServerLogs {"escritor2":15, "escritor3":16, "ServerLogs":11, "escritor1":19}
 INFO Received Message From Client
-ServerLogs {"lector2":4, "ServerLogs":12, "lector1":5, "lector3":5}
+ServerLogs {"ServerLogs":12, "escritor1":19, "escritor2":20, "escritor3":16}
 INFO Received Message From Client
-ServerLogs {"ServerLogs":13, "lector1":5, "lector3":5, "lector2":5}
+ServerLogs {"escritor2":20, "escritor3":21, "ServerLogs":13, "escritor1":19}
 INFO Received Message From Client
-ServerLogs {"lector3":5, "lector2":6, "ServerLogs":14, "lector1":5}
+ServerLogs {"ServerLogs":14, "escritor1":24, "escritor2":20, "escritor3":21}
 INFO Received Message From Client
-ServerLogs {"ServerLogs":15, "lector1":6, "lector3":5, "lector2":6}
+ServerLogs {"ServerLogs":15, "escritor1":24, "escritor2":25, "escritor3":21}
 INFO Received Message From Client
-ServerLogs {"lector2":6, "ServerLogs":16, "lector1":6, "lector3":6}
+ServerLogs {"ServerLogs":16, "escritor1":24, "escritor2":25, "escritor3":26}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":17, "escritor1":29, "escritor2":25, "escritor3":26}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":18, "escritor1":29, "escritor2":30, "escritor3":26}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":19, "escritor1":29, "escritor2":30, "escritor3":31}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":20, "escritor1":34, "escritor2":30, "escritor3":31}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":21, "escritor1":34, "escritor2":35, "escritor3":31}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":22, "escritor1":34, "escritor2":35, "escritor3":36}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":23, "escritor1":39, "escritor2":35, "escritor3":36}
+INFO Received Message From Client
+ServerLogs {"escritor1":39, "escritor2":40, "escritor3":36, "ServerLogs":24}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":25, "escritor1":39, "escritor2":40, "escritor3":41}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":26, "escritor1":44, "escritor2":40, "escritor3":41}
+INFO Received Message From Client
+ServerLogs {"escritor2":45, "escritor3":41, "ServerLogs":27, "escritor1":44}
+INFO Received Message From Client
+ServerLogs {"escritor2":45, "escritor3":46, "ServerLogs":28, "escritor1":44}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":29, "escritor1":49, "escritor2":45, "escritor3":46}
+INFO Received Message From Client
+ServerLogs {"escritor2":50, "escritor3":46, "ServerLogs":30, "escritor1":49}
+INFO Received Message From Client
+ServerLogs {"ServerLogs":31, "escritor1":49, "escritor2":50, "escritor3":51}
 INFO Received Message From Client
